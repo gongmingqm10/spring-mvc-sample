@@ -1,0 +1,39 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+                    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                    http://www.springframework.org/schema/security
+                    http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+    <beans:import resource='persistence-config.xml'/>
+
+    <http auto-config="true">
+        <form-login login-page="/login"
+                    default-target-url="/"
+                    authentication-failure-url="/loginfailed"
+                    always-use-default-target="true"/>
+        <logout logout-success-url="/logout" />
+        <session-management invalid-session-url="/login">
+            <concurrency-control max-sessions="1" error-if-maximum-exceeded="false"/>
+        </session-management>
+
+        <!--<intercept-url pattern="/admin" access="ROLE_ADMIN"/>-->
+        <!--<intercept-url pattern="/user" access="ROLE_REGULAR"/>-->
+        <!--<intercept-url pattern="/user/users" access="ROLE_ADMIN"/>-->
+        <!--<intercept-url pattern="/posts/**" access="ROLE_REGULAR,ROLE_ADMIN"/>-->
+        <!--<intercept-url pattern="/**" access="ROLE_REGULAR,ROLE_ADMIN" />-->
+        <!--<access-denied-handler error-page="/403" />-->
+    </http>
+
+    <authentication-manager>
+        <authentication-provider ref='daoAuthenticationProvider'/>
+    </authentication-manager>
+
+    <beans:bean id="daoAuthenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+        <beans:property name="userDetailsService" ref="loginService"/>
+    </beans:bean>
+
+    <beans:bean id="loginService" class="org.gongmingqm10.spring.service.LoginService">
+    </beans:bean>
+</beans:beans>
